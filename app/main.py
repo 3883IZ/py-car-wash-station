@@ -4,7 +4,6 @@ class Car:
         self.clean_mark = clean_mark
         self.brand = brand
 
-
 class CarWashStation:
     def __init__(self, distance_from_city_center: float,
                  clean_power: int,
@@ -25,16 +24,17 @@ class CarWashStation:
                  self.distance_from_city_center)
         return round(price, 1)
 
-    def wash_single_car(self, car: Car) -> float:
-        price = self.calculate_washing_price(car)
-        if price > 0:
+    def wash_single_car(self, car: Car) -> None:
+        if car.clean_mark < self.clean_power:
             car.clean_mark = self.clean_power
-        return price
+        # return не потрібен — поверне None
 
     def serve_cars(self, cars: list[Car]) -> float:
         total_income = 0.0
         for car in cars:
-            total_income += self.wash_single_car(car)
+            if car.clean_mark < self.clean_power:
+                total_income += self.calculate_washing_price(car)
+                self.wash_single_car(car)
         return round(total_income, 1)
 
     def rate_service(self, new_rate: int) -> None:
